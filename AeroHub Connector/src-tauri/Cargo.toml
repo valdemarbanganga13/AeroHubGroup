@@ -1,0 +1,37 @@
+[package]
+name = "aerohub-connector"
+version = "1.0.0"
+description = "AeroHub Connector — Infinite Flight no Discord Rich Presence"
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+# macos-private-api: janela transparente (cantos arredondados) no Mac
+tauri = { version = "2", features = ["macos-private-api"] }
+tauri-plugin-opener = "2"
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+discord-rich-presence = "1.1.0"
+# Atualizações (pelo domínio connector.aerohubradar.com) e reabrir o app depois
+tauri-plugin-updater = "2"
+tauri-plugin-process = "2"
+# Feeder: ligação segura ao servidor do AeroHub Group (WebSocket com TLS, sem depender do sistema)
+tungstenite = { version = "0.26", features = ["rustls-tls-webpki-roots"] }
+
+# Mini janela: avisos do Windows (minimizar, tapar), mostrar/esconder na hora e tocar os sons;
+# registo do Windows ("Iniciar com o Windows")
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = [
+  "Win32_Foundation",
+  "Win32_Graphics_Dwm",
+  "Win32_Graphics_Gdi",
+  "Win32_Media_Audio",
+  "Win32_System_Registry",
+  "Win32_System_Threading",
+  "Win32_UI_Accessibility",
+  "Win32_UI_HiDpi",
+  "Win32_UI_WindowsAndMessaging",
+] }

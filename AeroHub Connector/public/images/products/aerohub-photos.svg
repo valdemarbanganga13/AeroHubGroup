@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+  <!-- IMAGEM PROVISÓRIA — substituir pela imagem oficial com o mesmo nome -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D1E2C"/>
+      <stop offset="1" stop-color="#27311D"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="320" cy="200" r="220" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#008BFD" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#008BFD" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#FFFFFF" stroke-opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="640" height="400" fill="url(#bg)"/>
+  <rect width="640" height="400" fill="url(#grid)"/>
+  <rect width="640" height="400" fill="url(#glow)"/>
+  <path transform="translate(255 135) scale(0.3118)" d="M208.412 0C323.515 0.000259509 416.825 93.3094 416.825 208.412C416.825 323.515 323.515 416.825 208.412 416.825C93.3093 416.825 0 323.515 0 208.412C0.000177605 93.3094 93.3094 0.000173178 208.412 0ZM158.158 10.2236C150.375 12.1912 142.768 14.6048 135.369 17.4365L133.905 228.807L133.902 229.303L133.477 229.048L10.8818 155.623C8.8325 163.311 7.21961 171.177 6.07227 179.193L187.404 287.807L187.817 288.055L187.4 288.295L68.2148 357.167C74.0922 362.708 80.2971 367.905 86.7988 372.726L266.984 268.694L267.41 268.448V268.939L267.375 404.191C275.149 401.853 282.729 399.065 290.083 395.856V194.057L290.509 194.302L406.005 260.965C408.035 253.312 409.632 245.483 410.769 237.506L234.876 135.95L234.45 135.705L234.876 135.46L355.106 66.0605C349.563 60.349 343.689 54.9611 337.515 49.9258L158.584 153.247L158.158 153.492V10.2236Z" fill="#008BFD"/>
+</svg>

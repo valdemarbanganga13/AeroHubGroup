@@ -1,0 +1,7 @@
+# Texto sempre com fim de linha LF no repositório (igual em Windows e no GitHub Actions)
+* text=auto eol=lf
+
+# Binários: nunca mexer
+*.png binary
+*.ico binary
+*.wav binary

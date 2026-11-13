@@ -1,0 +1,1386 @@
+/* Parte principal do app: barra lateral (72px) + conteúdo */
+.app {
+  position: relative;
+  background: linear-gradient(180deg, var(--installer-from) 0%, var(--installer-to) 100%);
+}
+
+/* ---------- Logo (voa do canto da tela de sucesso para aqui) ---------- */
+.app-logo {
+  position: absolute;
+  z-index: 3;
+  aspect-ratio: 460.5 / 307;
+  pointer-events: none;
+}
+
+.app-logo svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ---------- Barra lateral ---------- */
+.sidebar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 72px;
+  padding: 86px 0 24px;
+  background: rgba(0, 0, 0, 0.22);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.06);
+  animation: sidebar-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes sidebar-in {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+.sidebar__group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar__item,
+.sidebar__account {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.sidebar__item svg {
+  width: 22px;
+  height: 22px;
+}
+
+.sidebar__item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
+
+/* Página atual: quadrado verde suave com cantos redondos.
+   Ao ser escolhida, o quadrado "salta" e o ícone anima:
+   a casa constrói-se, os quadrados dos Produtos reorganizam-se, a roda dentada gira. */
+.sidebar__item.is-active {
+  background: rgba(89, 157, 18, 0.2);
+  color: #8fd14f;
+  animation: nav-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Casa a construir-se: as paredes desenham-se de baixo para cima e o telhado cai no fim */
+.sidebar__item--home.is-active .home-icon__walls {
+  stroke-dasharray: 1;
+  animation: house-walls 0.55s cubic-bezier(0.45, 0, 0.25, 1) both;
+}
+
+.sidebar__item--home.is-active .home-icon__roof {
+  animation: house-roof 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s both;
+}
+
+@keyframes house-walls {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes house-roof {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+}
+
+/* Produtos: 4 quadrados → 2 retângulos + 2 quadrados (e volta) */
+.products-icon__tile {
+  width: 6.5px;
+  height: 6.5px;
+  transition:
+    x 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
+    y 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
+    height 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.products-icon__tile--1 {
+  x: 4px;
+  y: 4px;
+}
+
+.products-icon__tile--2 {
+  x: 13.5px;
+  y: 4px;
+}
+
+.products-icon__tile--3 {
+  x: 4px;
+  y: 13.5px;
+}
+
+.products-icon__tile--4 {
+  x: 13.5px;
+  y: 13.5px;
+}
+
+/* Selecionado: retângulo alto em cima à esquerda, quadrado em cima à direita,
+   quadrado por baixo do primeiro retângulo e retângulo alto em baixo à direita */
+.sidebar__item--products.is-active .products-icon__tile--1 {
+  height: 9px;
+}
+
+.sidebar__item--products.is-active .products-icon__tile--2 {
+  height: 5px;
+}
+
+.sidebar__item--products.is-active .products-icon__tile--3 {
+  y: 16px;
+  height: 4px;
+}
+
+.sidebar__item--products.is-active .products-icon__tile--4 {
+  y: 12px;
+  height: 8px;
+}
+
+.sidebar__item--settings.is-active svg {
+  animation: nav-spin 0.7s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+@keyframes nav-pop {
+  0% {
+    transform: scale(0.82);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes nav-spin {
+  from {
+    transform: rotate(-90deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.sidebar__account {
+  width: 38px;
+  height: 38px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #008bfd, #599d12);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sidebar__account:hover,
+.sidebar__account.is-active {
+  box-shadow:
+    0 0 0 2px #14171c,
+    0 0 0 4px rgba(143, 209, 79, 0.8);
+}
+
+.sidebar__item:focus-visible,
+.sidebar__account:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+/* Nome da página ao passar o rato */
+.sidebar__tooltip {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: #1b2228;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 6px 16px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-4px, -50%);
+  pointer-events: none;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.sidebar__item:hover .sidebar__tooltip,
+.sidebar__account:hover .sidebar__tooltip {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+/* ---------- Conteúdo ---------- */
+.app-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 72px;
+  animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.25s backwards;
+}
+
+.page {
+  height: 100%;
+  padding: 30px 30px 28px;
+}
+
+.page-header {
+  padding-right: 80px; /* espaço para os botões – e ✕ */
+}
+
+.page-header__title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.page-header__subtitle {
+  margin-top: 3px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Cartões */
+.status-card,
+.flight-card {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* ---------- Início: sem status disponível (ainda sem dados do servidor) ---------- */
+.no-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  padding: 36px 28px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.no-status__icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(31, 127, 214, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(31, 127, 214, 0.35);
+}
+
+.no-status__icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.no-status__title {
+  margin-top: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.no-status__text {
+  max-width: 340px;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- Início: estado ---------- */
+.status-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 20px;
+  padding: 14px 16px;
+}
+
+.status-card__dot {
+  position: relative;
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--status-color);
+}
+
+/* Onda à volta do ponto quando está a voar */
+.status-card.is-flying .status-card__dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--status-color);
+  animation: status-pulse 1.8s ease-out infinite;
+}
+
+@keyframes status-pulse {
+  to {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+.status-card.is-flying {
+  --status-color: #6cc93a;
+}
+
+.status-card.is-online {
+  --status-color: #3ea6ff;
+}
+
+.status-card.is-offline {
+  --status-color: rgba(255, 255, 255, 0.35);
+}
+
+.status-card__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.status-card__title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.status-card__detail {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.status-card__callsign {
+  padding: 4px 9px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.07);
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ---------- Início: voo atual ---------- */
+.flight-card {
+  margin-top: 12px;
+  padding: 16px 18px;
+}
+
+.flight-route {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.flight-route__airport {
+  display: flex;
+  flex-direction: column;
+}
+
+.flight-route__airport--end {
+  align-items: flex-end;
+}
+
+.flight-route__code {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.flight-route__city {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Progresso do voo: barra simples a encher, com o avião azul à frente */
+.flight-route__progress {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  margin: 0 18px 0 6px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.flight-route__fill {
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #4f8c10, #8fd14f);
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.flight-route__plane {
+  position: absolute;
+  top: 50%;
+  display: block;
+  width: 20px;
+  height: 20px;
+  transform: translate(-25%, -50%);
+  transition: left 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.flight-route__plane svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.flight-stats {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.flight-stats dt {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.flight-stats dd {
+  margin-top: 4px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.flight-stats__time {
+  font-variant-numeric: tabular-nums;
+}
+
+.server-badge {
+  padding: 2px 8px;
+  border-radius: 50px;
+  font-size: 12px;
+}
+
+.server-badge.is-casual {
+  background: rgba(62, 166, 255, 0.16);
+  color: #6dbbff;
+}
+
+.server-badge.is-training {
+  background: rgba(255, 184, 0, 0.16);
+  color: #ffc94d;
+}
+
+.server-badge.is-expert {
+  background: rgba(229, 72, 77, 0.16);
+  color: #ff7a7e;
+}
+
+/* ---------- Início: pré-visualização no Discord ---------- */
+.discord-preview {
+  margin-top: 16px;
+}
+
+.discord-preview__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Botão ⧉: põe o cartão numa mini janela por cima de tudo */
+.discord-preview__pip {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.discord-preview__pip svg {
+  width: 17px;
+  height: 17px;
+}
+
+.discord-preview__pip:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #8fd14f;
+}
+
+.discord-preview__pip:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.discord-preview__label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.discord-preview .presence-card {
+  margin-top: 8px;
+}
+
+/* ---------- Produtos ---------- */
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  list-style: none;
+}
+
+.product-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-weight: 400;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+a.product-card:hover {
+  background: rgba(255, 255, 255, 0.075);
+  box-shadow: inset 0 0 0 1px rgba(143, 209, 79, 0.45);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.product-card:active {
+  transform: scale(0.985);
+}
+
+/* Ícone do produto: simples, sem fundo */
+.product-card__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  color: #ffffff;
+}
+
+.product-card__icon img,
+.product-card__icon > svg {
+  display: block;
+  width: auto;
+  height: 32px;
+}
+
+/* Pessoa a pensar do AeroHub Support: desenho mais largo, um pouco maior */
+.product-card__icon img.product-card__support {
+  height: 46px;
+}
+
+/* Os balões do Forms têm uma "cauda" em baixo: um pouco mais altos para ficarem do tamanho dos outros */
+.product-card__icon > svg.product-card__forms {
+  height: 38px;
+}
+
+.product-card__connector {
+  display: block;
+  width: 44px;
+}
+
+.product-card__connector svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.product-card__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.product-card__name {
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.product-card__description {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.product-card.is-disabled {
+  cursor: default;
+}
+
+.product-card.is-disabled:active {
+  transform: none;
+}
+
+.product-card__link.is-soon {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.product-card__link {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8fd14f;
+}
+
+/* Página Início em coluna, para o rodapé ficar no fundo */
+.home {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Rodapé do Início: termos e, por baixo, as redes sociais ---------- */
+.app-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+}
+
+/* Termos e privacidade: texto pequeno e clicável */
+.app-footer__legal {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.app-footer__legal .external-link {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.app-footer__legal .external-link:hover {
+  color: #ffffff;
+}
+
+/* ---------- Definições ---------- */
+.settings-section {
+  margin-top: 22px;
+}
+
+.settings-scroll > .settings-section:first-child {
+  margin-top: 18px;
+}
+
+.settings-section__title {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.settings-card {
+  margin-top: 8px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+}
+
+.settings-row + .settings-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.settings-row__title {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.settings-row__description {
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.settings-row .select__button,
+.settings-row .select__menu {
+  width: 170px;
+}
+
+/* A linha toda dos interruptores é clicável */
+.settings-row--toggle {
+  cursor: pointer;
+}
+
+.settings-row__text {
+  min-width: 0;
+}
+
+/* Botão "Test": fica verde quando o Discord foi aberto */
+.settings-test {
+  flex-shrink: 0;
+  height: 30px;
+  min-width: 84px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.settings-test.is-done {
+  background: rgba(89, 157, 18, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(143, 209, 79, 0.5);
+  color: #8fd14f;
+}
+
+/* Opções extra por baixo de um interruptor (ex.: fixar estado no ecrã) */
+.settings-suboptions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 2px 16px 14px 16px;
+  transition: opacity 0.2s ease;
+}
+
+.settings-suboptions .checkbox {
+  font-size: 12.5px;
+}
+
+.settings-suboptions.is-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.settings-suboptions + .settings-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Som ao fixar: lista de sons + botão ▶ para ouvir */
+.settings-sound {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-row .settings-sound__select .select__button,
+.settings-row .settings-sound__select .select__menu {
+  width: 150px;
+}
+
+.settings-sound__play {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
+}
+
+.settings-sound__play svg {
+  width: 14px;
+  height: 14px;
+}
+
+.settings-sound__play:hover {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+.settings-sound__play:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+/* A tocar: fica verde por um instante */
+.settings-sound__play.is-playing {
+  background: rgba(89, 157, 18, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(143, 209, 79, 0.5);
+  color: #8fd14f;
+}
+
+.settings-sound__play.is-playing svg {
+  animation: sound-pulse 0.7s ease;
+}
+
+@keyframes sound-pulse {
+  40% {
+    transform: scale(1.25);
+  }
+}
+
+.settings-sound__play:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* Botão "Check for updates" */
+.settings-check {
+  flex-shrink: 0;
+  height: 30px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+/* Definições: o título fica fixo e só as secções deslizam (o conteúdo nunca passa por
+   baixo dos botões – e ✕). Barra fina, só visível ao passar o rato; esbatimento no topo. */
+.page.settings {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+}
+
+.settings-scroll {
+  flex: 1;
+  min-height: 0;
+  margin: 0 -30px;
+  padding: 0 30px 28px;
+  overflow-y: auto;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 16px);
+  mask-image: linear-gradient(180deg, transparent 0, #000 16px);
+}
+
+.settings-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.settings-scroll::-webkit-scrollbar-track {
+  margin: 12px 0;
+}
+
+.settings-scroll::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 10px;
+  background: transparent padding-box;
+}
+
+.settings-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
+.settings-test:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+/* ---------- Redes sociais ---------- */
+.social-links {
+  display: flex;
+  gap: 6px;
+}
+
+.social-links__item {
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 7px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.social-links__item svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Logos mais largos (ex.: Infinite Flight) */
+.social-links__item svg.social-links__wide {
+  width: auto;
+  height: 13px;
+}
+
+a.social-links__item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Os logos das redes são sempre brancos (as marcas não deixam mudar a cor): ganham à cor verde dos links */
+.social-links a.social-links__item.external-link {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.social-links a.social-links__item.external-link:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Sem endereço ainda: aparece, mas não reage */
+.social-links__item.is-soon {
+  cursor: default;
+}
+
+/* ---------- Perfil ---------- */
+.page.account {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cartão da conta: avatar, nome + bandeira, @utilizador */
+.account-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.account-profile__avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #008bfd, #599d12);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.account-profile__info {
+  min-width: 0;
+}
+
+.account-profile__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.account-profile__meta {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.account .settings-section {
+  margin-top: 18px;
+}
+
+/* Etiqueta de estado (Ativa / Ligada) */
+.status-badge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.is-ok {
+  background: rgba(89, 157, 18, 0.2);
+  color: #8fd14f;
+}
+
+.status-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Conta ligada: ícone + nome */
+.linked-account {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.linked-account__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
+
+.linked-account__icon svg {
+  width: 22px;
+  height: auto;
+}
+
+.account-add {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  min-width: 0;
+  height: 30px;
+  padding: 0 14px;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.account-add:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Ações no fundo: gerir conta no site e terminar sessão */
+.account-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.account-actions__manage {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.account-actions__signout {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #ff7a7e;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.account-actions__signout:hover {
+  background: rgba(229, 72, 77, 0.14);
+}
+
+/* ---------- Janela de confirmação ---------- */
+.dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  background: rgba(8, 12, 16, 0.6);
+  backdrop-filter: blur(3px);
+  animation: dialog-fade 0.2s ease;
+}
+
+.dialog {
+  width: 300px;
+  padding: 20px;
+  border-radius: 16px;
+  background: #1b2228;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 20px 40px rgba(0, 0, 0, 0.5);
+  animation: dialog-pop 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.dialog__title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.dialog__text {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.dialog__actions .btn {
+  height: 32px;
+  font-size: 13.5px;
+}
+
+@keyframes dialog-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+/* ---------- Feeder ---------- */
+/* Ícone da barra lateral: as ondas acendem uma de cada vez quando a página está aberta
+   e, com o feeder ligado, sempre (verde, mesmo noutra página) */
+.sidebar__item--feeder.is-active .feeder-icon__wave,
+.sidebar__item--feeder.is-live .feeder-icon__wave {
+  animation: feeder-wave 1.6s ease-in-out infinite;
+}
+
+.sidebar__item--feeder.is-active .feeder-icon__wave--2,
+.sidebar__item--feeder.is-live .feeder-icon__wave--2 {
+  animation-delay: 0.25s;
+}
+
+.sidebar__item--feeder.is-live {
+  color: #8fd14f;
+}
+
+@keyframes feeder-wave {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.feeder-status__main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.feeder-dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.feeder-dot.is-searching {
+  background: #f5b942;
+  animation: feeder-pulse 1.2s ease-in-out infinite;
+}
+
+.feeder-dot.is-connected {
+  background: #8fd14f;
+  box-shadow: 0 0 0 4px rgba(143, 209, 79, 0.18);
+}
+
+@keyframes feeder-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 185, 66, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(245, 185, 66, 0);
+  }
+}
+
+.feeder-button {
+  flex-shrink: 0;
+  height: 30px;
+  min-width: 96px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+/* Enquanto liga ou está ligado, não se muda o modo nem o IP */
+.settings-card.is-locked {
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
+}
+
+.settings-row.is-disabled {
+  opacity: 0.4;
+}
+
+.feeder-other-user {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #f5b942;
+}
+
+.feeder-locked-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.feeder-input {
+  flex-shrink: 0;
+  width: 170px;
+  height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font: inherit;
+  font-size: 13px;
+  transition: box-shadow 0.2s ease;
+}
+
+.feeder-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.feeder-input:focus {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.feeder-input.is-invalid {
+  box-shadow: inset 0 0 0 1px rgba(240, 90, 90, 0.7);
+}
+
+.feeder-guide {
+  padding: 0 16px 14px 34px;
+  font-size: 12.5px;
+}
+
+.feeder-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px 14px 34px;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.feeder-waiting {
+  padding: 14px 16px;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.feeder-live__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 16px;
+  font-size: 13px;
+}
+
+.feeder-live__row + .feeder-live__row {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.feeder-live__row dt {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.feeder-live__row dd {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ---------- Armazenamento (voos gravados pelo Feeder) ---------- */
+.storage-button {
+  flex-shrink: 0;
+  height: 30px;
+  min-width: 96px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.storage-confirm {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.storage-flight {
+  align-items: flex-start;
+}
+
+.storage-flight .settings-row__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.storage-flight__dot {
+  width: 8px;
+  height: 8px;
+}
+
+.storage-flight__size {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.storage-flight__state {
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.storage-flight__state.is-active {
+  color: #8fd14f;
+}

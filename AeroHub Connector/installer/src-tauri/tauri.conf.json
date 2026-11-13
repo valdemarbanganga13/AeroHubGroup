@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "AeroHub Connector Setup",
+  "version": "../../package.json",
+  "identifier": "com.aerohub.connector.setup",
+  "build": {
+    "beforeDevCommand": "npm run dev:setup",
+    "devUrl": "http://localhost:1422/setup.html",
+    "beforeBuildCommand": "npm run build:setup",
+    "frontendDist": "../../dist-setup"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "AeroHub Connector Setup",
+        "url": "setup.html",
+        "width": 555,
+        "height": 555,
+        "resizable": false,
+        "maximizable": false,
+        "decorations": false,
+        "transparent": true,
+        "shadow": false,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": false,
+    "icon": ["../../src-tauri/icons/app-icon.ico"]
+  }
+}

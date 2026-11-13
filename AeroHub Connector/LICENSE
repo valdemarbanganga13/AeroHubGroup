@@ -1,0 +1,60 @@
+AeroHub Connector Source Viewing License
+Version 1.0, 2026
+
+Copyright (c) 2026 AeroHub Group. All rights reserved.
+
+This license applies to the files in the "AeroHub Connector" folder of this repository
+(the "Source Code"). The Source Code is published only so that people can see and check what
+the AeroHub Connector app does. It is NOT open source.
+
+1. WHAT YOU MAY DO
+
+   You may, for personal and non-commercial purposes only:
+
+   a) read and review the Source Code;
+   b) build the Source Code on your own computer, only to check that it matches the official
+      AeroHub Connector app published by AeroHub Group, and run that build only for that check;
+   c) talk about the Source Code and quote short parts of it in reviews, security reports or
+      discussions, with a link back to this repository.
+
+2. WHAT YOU MAY NOT DO
+
+   Except for what section 1 allows, you may not, in whole or in part:
+
+   a) use the Source Code, or any build made from it, for any other purpose;
+   b) copy, modify, translate or adapt it, or create works based on it;
+   c) publish, distribute, share, sell, rent, lend or sublicense it, or any build made from it;
+   d) use it to create, train, improve or run any other product or service, including any flight
+      tracker, radar, feeder, Discord integration or companion app for Infinite Flight;
+   e) remove, bypass or change any licence check, account check or security feature;
+   f) remove or change this license or any copyright notice.
+
+3. NO OTHER RIGHTS
+
+   AeroHub Group keeps all rights not expressly granted in section 1. No rights are granted to
+   any trademark, name or logo, including "AeroHub", "AeroHub Group", "AeroHub Radar",
+   "AeroHub Photos" and "AeroHub Connector", or to any third-party trademark.
+
+   Copies created by GitHub when someone uses its "Fork" feature exist only as required by the
+   GitHub Terms of Service and do not grant any right beyond section 1.
+
+4. THE OFFICIAL APP
+
+   This license does not cover the official AeroHub Connector app. Using the official app is
+   governed by the AeroHub Connector Terms of Use and Terms of Service:
+   https://connector.aerohubradar.com/terms-of-use
+
+5. ENDING THIS LICENSE
+
+   If you break any part of this license, your rights under it end automatically and you must
+   delete every copy and build of the Source Code you have.
+
+6. NO WARRANTY
+
+   THE SOURCE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. TO THE MAXIMUM EXTENT
+   ALLOWED BY LAW, AEROHUB GROUP IS NOT LIABLE FOR ANY CLAIM, DAMAGE OR OTHER LIABILITY ARISING
+   FROM THE SOURCE CODE OR ITS USE.
+
+7. CONTACT
+
+   Questions about this license, or security reports: https://aerohubradar.com/contact

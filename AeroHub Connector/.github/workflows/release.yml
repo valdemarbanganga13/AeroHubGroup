@@ -1,0 +1,219 @@
+# Publicar uma versão nova (corre sozinho quando se envia uma etiqueta v0.2.0, por exemplo,
+# com `npm run release 0.2.0`).
+#
+# 1. Windows: compila o app num Windows do GitHub, assina a atualização e publica em
+#    github.com/valdemarbanganga13/aerohub-connector-releases (público, sem código).
+# 2. Mac: compila a versão universal (Apple Silicon + Intel) num Mac do GitHub e junta-a à mesma versão
+#    (AeroHub-Connector-Mac.dmg para o site + a atualização para o app no Mac).
+# 3. Grava o tamanho de cada atualização no latest.json (o app mostra-o antes de descarregar).
+# connector.aerohubradar.com/updates/latest.json reencaminha para a última versão publicada;
+# o app do Windows lê a entrada "windows-x86_64" e o do Mac a "darwin-…".
+#
+# Segredos usados (Settings → Secrets and variables → Actions; nunca no código):
+#   TAURI_SIGNING_PRIVATE_KEY           chave privada das atualizações
+#   TAURI_SIGNING_PRIVATE_KEY_PASSWORD  senha dessa chave
+#   RELEASES_TOKEN                      token com permissão para publicar no repositório de versões
+#   DISCORD_CLIENT_ID                   Application ID do Discord (o .env não vai para o GitHub)
+#
+# Variáveis públicas (Settings → Secrets and variables → Actions → separador "Variables"):
+#   VITE_SUPABASE_URL                   endereço do projeto Supabase do AeroHub Radar
+#   VITE_SUPABASE_ANON_KEY              chave pública "anon" desse projeto (nunca a service_role)
+#   VITE_CONNECTOR_LINK_FUNCTION        endereço da função que entrega a sessão ao app (ex.: smart-handler)
+#   VITE_FEEDER_SERVER_URL              (opcional) servidor do Feeder; sem ela: wss://aerohubradar.com/api/feeder/ws
+
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    outputs:
+      notes: ${{ steps.notes.outputs.body }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Confirmar que a etiqueta bate com a versão do app
+        shell: bash
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [ "v$VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "A etiqueta $GITHUB_REF_NAME não bate com a versão $VERSION do package.json" >&2
+            exit 1
+          fi
+
+      - name: Ler as novidades guardadas na etiqueta
+        id: notes
+        shell: bash
+        run: |
+          git fetch --force origin "refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME"
+          NOTES=$(git tag -l --format='%(contents)' "$GITHUB_REF_NAME")
+          # Sem novidades escritas: o app mostra "Melhorias e correções."
+          if [ "$NOTES" = "AeroHub Connector $GITHUB_REF_NAME" ]; then NOTES=""; fi
+          {
+            echo "body<<END_OF_NOTES"
+            echo "$NOTES"
+            echo "END_OF_NOTES"
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            ./src-tauri -> target
+            ./installer/src-tauri -> target
+
+      - run: npm ci
+
+      - name: Compilar, assinar e publicar
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+          # O app instalado abre como app (animação do ícone → Início), não no instalador de demonstração
+          VITE_START_SCREEN: splash
+          # Login com a conta AeroHub Radar (valores públicos)
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+          VITE_CONNECTOR_LINK_FUNCTION: ${{ vars.VITE_CONNECTOR_LINK_FUNCTION }}
+          # Feeder: o servidor do AeroHub Group (sem a variável: o domínio verdadeiro)
+          VITE_FEEDER_SERVER_URL: ${{ vars.VITE_FEEDER_SERVER_URL || 'wss://aerohubradar.com/api/feeder/ws' }}
+          VITE_RADAR_SITE_URL: https://aerohubradar.com
+        with:
+          owner: valdemarbanganga13
+          repo: aerohub-connector-releases
+          # A etiqueta é criada no ramo main do repositório de versões (o commit do app não existe lá)
+          releaseCommitish: main
+          tagName: v__VERSION__
+          releaseName: AeroHub Connector v__VERSION__
+          releaseBody: ${{ steps.notes.outputs.body }}
+          releaseDraft: false
+          prerelease: false
+          includeUpdaterJson: true
+          updaterJsonPreferNsis: true
+
+      # O ficheiro que se descarrega do site: as nossas telas de instalação, com o app lá dentro
+      # (instala-o escondido com o instalador acabado de compilar acima)
+      - name: Compilar o AeroHub Connector Setup
+        shell: bash
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          export AEROHUB_APP_INSTALLER="$(pwd -W)/src-tauri/target/release/bundle/nsis/AeroHub Connector_${VERSION}_x64-setup.exe"
+          export AEROHUB_APP_SIZE=$(stat -c %s src-tauri/target/release/aerohub-connector.exe)
+          test -f "$AEROHUB_APP_INSTALLER"
+          npm run setup:build
+          cp installer/src-tauri/target/release/aerohub-connector-setup.exe AeroHub-Connector-Setup.exe
+
+      # Nome fixo: o site pode apontar sempre para .../releases/latest/download/AeroHub-Connector-Setup.exe
+      - name: Publicar o AeroHub Connector Setup
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: |
+          gh release upload "$GITHUB_REF_NAME" AeroHub-Connector-Setup.exe \
+            --repo valdemarbanganga13/aerohub-connector-releases --clobber
+
+  # Versão Mac, na mesma versão do GitHub (depois do Windows, para o latest.json ficar com os dois)
+  mac:
+    needs: release
+    runs-on: macos-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: ./src-tauri -> target
+
+      - run: npm ci
+
+      - name: Compilar, assinar e publicar (Mac)
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+          VITE_START_SCREEN: splash
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+          VITE_CONNECTOR_LINK_FUNCTION: ${{ vars.VITE_CONNECTOR_LINK_FUNCTION }}
+          # Feeder: o servidor do AeroHub Group (sem a variável: o domínio verdadeiro)
+          VITE_FEEDER_SERVER_URL: ${{ vars.VITE_FEEDER_SERVER_URL || 'wss://aerohubradar.com/api/feeder/ws' }}
+          VITE_RADAR_SITE_URL: https://aerohubradar.com
+        with:
+          owner: valdemarbanganga13
+          repo: aerohub-connector-releases
+          releaseCommitish: main
+          tagName: v__VERSION__
+          releaseName: AeroHub Connector v__VERSION__
+          releaseBody: ${{ needs.release.outputs.notes }}
+          releaseDraft: false
+          prerelease: false
+          includeUpdaterJson: true
+          args: --target universal-apple-darwin --bundles app,dmg
+
+      # Nome fixo: o site aponta sempre para .../releases/latest/download/AeroHub-Connector-Mac.dmg
+      - name: Publicar o AeroHub-Connector-Mac.dmg
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: |
+          DMG=$(ls src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg | head -n 1)
+          test -f "$DMG"
+          cp "$DMG" AeroHub-Connector-Mac.dmg
+          gh release upload "$GITHUB_REF_NAME" AeroHub-Connector-Mac.dmg --repo valdemarbanganga13/aerohub-connector-releases --clobber
+
+  # O app mostra o tamanho da atualização antes de descarregar (e usa-o na barra de progresso).
+  # Cada sistema fica com o tamanho do seu ficheiro.
+  sizes:
+    needs: mac
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Gravar o tamanho de cada atualização no latest.json
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: |
+          REPO=valdemarbanganga13/aerohub-connector-releases
+          gh release download "$GITHUB_REF_NAME" --repo "$REPO" --pattern latest.json --dir updater --clobber
+          gh release view "$GITHUB_REF_NAME" --repo "$REPO" --json assets > assets.json
+          node -e "
+            const fs = require('fs');
+            const file = 'updater/latest.json';
+            const json = JSON.parse(fs.readFileSync(file, 'utf8'));
+            const assets = JSON.parse(fs.readFileSync('assets.json', 'utf8')).assets;
+            for (const [name, platform] of Object.entries(json.platforms)) {
+              const fileName = decodeURIComponent(String(platform.url).split('/').pop());
+              const asset = assets.find((a) => a.url === platform.url || a.name === fileName);
+              if (asset) platform.size = asset.size;
+              else console.log('Sem tamanho para', name, platform.url);
+            }
+            fs.writeFileSync(file, JSON.stringify(json, null, 2));
+          "
+          gh release upload "$GITHUB_REF_NAME" updater/latest.json --repo "$REPO" --clobber

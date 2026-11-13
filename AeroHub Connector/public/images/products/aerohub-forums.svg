@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+  <!-- IMAGEM PROVISÓRIA — substituir pela imagem oficial com o mesmo nome -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D1E2C"/>
+      <stop offset="1" stop-color="#27311D"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="320" cy="200" r="220" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8FD14F" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#8FD14F" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#FFFFFF" stroke-opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="640" height="400" fill="url(#bg)"/>
+  <rect width="640" height="400" fill="url(#grid)"/>
+  <rect width="640" height="400" fill="url(#glow)"/>
+  <g transform="translate(320 200)" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M-78 -58h96a18 18 0 0 1 18 18v52a18 18 0 0 1-18 18h-54l-30 24v-24h-12a18 18 0 0 1-18-18v-52a18 18 0 0 1 18-18z"/>
+    <path d="M54 -6h24a18 18 0 0 1 18 18v42a18 18 0 0 1-18 18h-6v20l-26-20h-34a18 18 0 0 1-18-18v-8" stroke="#8FD14F"/>
+  </g>
+</svg>

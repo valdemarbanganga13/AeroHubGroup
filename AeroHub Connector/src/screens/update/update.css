@@ -1,0 +1,230 @@
+/* Ecrã de atualização — reaproveita os estilos do instalador (cabeçalho, progresso, pontos)
+   e do logo (desenho, processar, redesenhar) */
+.update,
+.launch-splash {
+  position: relative;
+  background: linear-gradient(180deg, var(--installer-from) 0%, var(--installer-to) 100%);
+}
+
+.update-step {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Entrada suave de cada passo (a linha do ficheiro muda sempre, por isso fica de fora) */
+.update-step > :not(.installing-file) {
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.35s backwards;
+}
+
+/* "Checking for updates..." por baixo do ícone, só enquanto procura */
+.update-checking {
+  position: absolute;
+  top: 362px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  pointer-events: none;
+  animation: fade-up 0.5s ease 0.8s backwards;
+  transition:
+    opacity 0.3s ease,
+    visibility 0s;
+}
+
+.update:not(.is-checking) .update-checking {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+
+/* ---------- Atualização encontrada ---------- */
+.update-info {
+  position: absolute;
+  top: 152px;
+  left: 45px;
+  right: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.update-info__versions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.update-info__version {
+  padding: 4px 10px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.update-info__version.is-new {
+  background: rgba(89, 157, 18, 0.2);
+  color: #8fd14f;
+}
+
+.update-info__arrow {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.update-info__size {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.update-info__size strong {
+  margin-top: 2px;
+  font-size: 13.5px;
+  color: #ffffff;
+}
+
+.update-notes {
+  position: absolute;
+  top: 236px;
+  left: 45px;
+  right: 45px;
+}
+
+.update-notes__title {
+  margin-bottom: 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Botões nos cantos de baixo, como no instalador */
+.update-action {
+  position: absolute;
+  bottom: 45px;
+  pointer-events: auto;
+}
+
+.update-action--left {
+  left: 45px;
+}
+
+.update-action--right {
+  right: 45px;
+}
+
+/* ---------- A atualizar: engrenagens ---------- */
+.gears-animation {
+  position: absolute;
+  top: 154px;
+  left: 50%;
+  width: 132px;
+  height: 123px;
+  margin-left: -66px;
+}
+
+.gears-animation svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.gears-animation__big,
+.gears-animation__small {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* A grande roda num sentido e a pequena no outro, à velocidade certa para "engrenarem" */
+.gears-animation__big {
+  animation: gear-spin 6s linear infinite;
+}
+
+.gears-animation__small {
+  animation: gear-spin-reverse 4.5s linear infinite;
+}
+
+.gears-animation.is-paused .gears-animation__big,
+.gears-animation.is-paused .gears-animation__small {
+  animation-play-state: paused;
+}
+
+@keyframes gear-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gear-spin-reverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* ---------- Concluída ---------- */
+.update-done {
+  position: absolute;
+  top: 278px;
+  left: 45px;
+  right: 45px;
+  text-align: center;
+  animation-delay: 3.2s !important;
+}
+
+/* "Está tudo em dia" / erro: o ícone já está desenhado, a mensagem entra logo */
+.update-done--quick {
+  animation-delay: 0.45s !important;
+}
+
+.update-done__title {
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.update-done__text {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* "Open AeroHub Connector": só aparece depois do redesenho do logo */
+.update-open {
+  animation: none !important;
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s;
+}
+
+.update-open.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .update *,
+  .update *::before,
+  .update *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+  }
+}

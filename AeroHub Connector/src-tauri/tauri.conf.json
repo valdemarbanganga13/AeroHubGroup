@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "AeroHub Connector",
+  "version": "../package.json",
+  "identifier": "com.aerohub.connector",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "AeroHub Connector",
+        "width": 555,
+        "height": 555,
+        "resizable": false,
+        "maximizable": false,
+        "decorations": false,
+        "transparent": true,
+        "shadow": false,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    },
+    "macOSPrivateApi": true
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "createUpdaterArtifacts": true,
+    "publisher": "AeroHub Group",
+    "copyright": "© 2026 AeroHub Group",
+    "shortDescription": "Infinite Flight on Discord",
+    "icon": [
+      "icons/app-icon-32x32.png",
+      "icons/app-icon-128x128.png",
+      "icons/app-icon-256x256.png",
+      "icons/app-icon-512x512.png",
+      "icons/app-icon.ico",
+      "icons/app-icon.icns"
+    ],
+    "macOS": {
+      "minimumSystemVersion": "10.15"
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "installerIcon": "icons/app-icon.ico",
+        "installerHooks": "windows/hooks.nsh"
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "endpoints": ["https://connector.aerohubradar.com/updates/latest.json"],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU2NzAwRDk3OTIzMzI3NDgKUldSSUp6T1NsdzF3NWg4SXRnOUFoL0dLOHAwTWpNbGhZQkJHTUtsWVI3MVdXWHFJanFaWjdxeWwK",
+      "windows": {
+        "installMode": "quiet"
+      }
+    }
+  }
+}

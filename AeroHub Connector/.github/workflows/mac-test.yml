@@ -1,0 +1,60 @@
+# Versão de TESTE para Mac (só se corre à mão: GitHub → Actions → "Mac test build" → Run workflow).
+#
+# Compila o app num Mac do GitHub (o Windows não consegue compilar apps de Mac) e guarda o .dmg
+# nos "Artifacts" dessa execução. NÃO publica nada no repositório público de versões e não mexe
+# nas atualizações dos utilizadores de Windows.
+#
+# Funciona em Macs com Apple Silicon (M1, M2…) e com Intel (universal).
+# Sem certificado Apple Developer: o Mac avisa na primeira abertura (ver as instruções para quem testa).
+#
+# Usa os mesmos segredos e variáveis do release.yml.
+
+name: Mac test build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mac:
+    runs-on: macos-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: ./src-tauri -> target
+
+      - run: npm ci
+
+      - name: Compilar o .dmg (universal)
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+          VITE_START_SCREEN: splash
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+          VITE_CONNECTOR_LINK_FUNCTION: ${{ vars.VITE_CONNECTOR_LINK_FUNCTION }}
+          # Feeder: o servidor do AeroHub Group (sem a variável: o domínio verdadeiro)
+          VITE_FEEDER_SERVER_URL: ${{ vars.VITE_FEEDER_SERVER_URL || 'wss://aerohubradar.com/api/feeder/ws' }}
+          VITE_RADAR_SITE_URL: ${{ vars.VITE_RADAR_SITE_URL || 'https://aerohubradar.com' }}
+        run: npm run tauri build -- --target universal-apple-darwin --bundles dmg
+
+      - name: Guardar o .dmg
+        uses: actions/upload-artifact@v4
+        with:
+          name: AeroHub-Connector-Mac-test
+          path: src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
+          retention-days: 14

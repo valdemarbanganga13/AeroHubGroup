@@ -1,0 +1,541 @@
+.installer {
+  position: relative;
+  background: linear-gradient(180deg, var(--installer-from) 0%, var(--installer-to) 100%);
+}
+
+/* ---------- Passos ----------
+   Cada passo ocupa a janela inteira. Ao mudar de passo, o atual desaparece
+   e o seguinte aparece logo a seguir, enquanto o ícone voa para o novo lugar.
+   pointer-events: none deixa arrastar a janela por cima dos textos. */
+.installer-step {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+
+.installer-step.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 0.45s ease 0.3s,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.3s,
+    visibility 0s;
+}
+
+/* Botão Next: partilhado por todos os passos, no canto inferior direito */
+.installer-next {
+  position: absolute;
+  right: 45px;
+  bottom: 45px;
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 4.4s backwards;
+  transition:
+    filter 0.2s ease,
+    transform 0.3s ease,
+    opacity 0.3s ease,
+    visibility 0s;
+}
+
+/* Botão Back: canto inferior esquerdo. Partilhado pelos passos: aparece uma vez
+   (junto com a página seguinte) e depois fica parado enquanto as páginas trocam. */
+.installer-back {
+  position: absolute;
+  left: 45px;
+  bottom: 45px;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.45s ease 0.3s,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.3s,
+    visibility 0s;
+}
+
+.installer-back.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+
+/* ---------- Passo 1: Boas-vindas ---------- */
+.installer-about,
+.installer-credit {
+  position: absolute;
+  animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.installer-about {
+  top: 178px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation-delay: 3.9s;
+}
+
+.installer-about__title {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.installer-about__description {
+  max-width: 400px;
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.installer-about__description strong {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Autor e versão: canto inferior esquerdo, alinhado ao centro do botão Next */
+.installer-credit {
+  left: 45px;
+  bottom: 45px;
+  height: 33px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  animation-delay: 4.4s;
+}
+
+.installer-credit strong {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.installer-credit__version {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ---------- Passo 2: Termos ---------- */
+.step-header {
+  position: absolute;
+  top: 88px;
+  left: 45px;
+  right: 45px;
+}
+
+.step-header__title {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.step-header__subtitle {
+  margin-top: 4px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Resumo dos termos: escrito direto na página, sem caixa */
+.terms-summary {
+  position: absolute;
+  top: 150px;
+  left: 45px;
+  right: 45px;
+  pointer-events: auto;
+}
+
+.terms-points {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+}
+
+.terms-points__item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.terms-points__dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-green);
+  transform: translateY(-1px);
+}
+
+.terms-points__item strong {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Aviso de que é só um resumo, com os links para o site */
+.terms-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 26px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.terms-notice__icon {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Caixa "li e aceito" (estilo da caixa em styles.css) */
+.terms-accept {
+  position: absolute;
+  top: 398px;
+  left: 45px;
+  right: 45px;
+}
+
+/* ---------- Passo 3: Opções de instalação ---------- */
+.options-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Língua: rótulo à esquerda, menu à direita */
+.options-language {
+  position: absolute;
+  top: 146px;
+  left: 45px;
+  right: 45px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.options-location {
+  position: absolute;
+  top: 198px;
+  left: 45px;
+  right: 45px;
+}
+
+.options-location__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.options-location__path {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: 9px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.options-location__path span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.options-location__icon {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.options-location__change {
+  width: auto;
+  height: 38px;
+  padding: 0 18px;
+  font-size: 13px;
+  pointer-events: auto;
+}
+
+.options-list {
+  position: absolute;
+  top: 280px;
+  left: 45px;
+  right: 45px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.options-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.options-item__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.options-item__title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.options-item__description {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ---------- Passo 4: A instalar ---------- */
+.installer-next.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+
+/* Pasta com ficheiros a entrar */
+.files-animation {
+  position: absolute;
+  top: 154px;
+  left: 50%;
+  width: 137px;
+  height: 120px;
+  margin-left: -68.5px;
+}
+
+.files-animation svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.files-animation__file {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: file-drop 1.8s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+
+.files-animation__front {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: folder-bump 0.6s ease-in-out infinite;
+}
+
+.files-animation.is-paused .files-animation__file {
+  animation: none;
+  opacity: 0;
+}
+
+.files-animation.is-paused .files-animation__front {
+  animation: none;
+}
+
+@keyframes file-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-26px) rotate(-10deg);
+  }
+  18% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(36px) rotate(0deg);
+  }
+  75%,
+  100% {
+    opacity: 0;
+    transform: translateY(48px) rotate(0deg);
+  }
+}
+
+/* A frente da pasta "afunda" ligeiramente sempre que entra um ficheiro */
+@keyframes folder-bump {
+  0%,
+  45%,
+  100% {
+    transform: scaleY(1);
+  }
+  62% {
+    transform: scaleY(0.95);
+  }
+}
+
+/* Ficheiro / tarefa atual */
+.installing-file {
+  position: absolute;
+  top: 288px;
+  left: 45px;
+  right: 45px;
+  overflow: hidden;
+  text-align: center;
+  white-space: pre;
+  text-overflow: ellipsis;
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.5);
+  animation: fade-in-quick 0.25s ease;
+}
+
+@keyframes fade-in-quick {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Barra de progresso com tamanho, tempo e velocidade */
+.installing-progress {
+  position: absolute;
+  top: 326px;
+  left: 45px;
+  right: 45px;
+}
+
+.installing-progress__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+
+.installing-progress__percent {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.installing-progress__row--muted {
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.progress-bar {
+  position: relative;
+  height: 12px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.progress-bar__fill {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #4f8c10, var(--brand-green) 60%, #7cc23a);
+  transition: width 0.15s linear;
+}
+
+/* Brilho que passa pela barra enquanto instala */
+.progress-bar__fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: translateX(-100%);
+  animation: progress-shine 1.4s ease-in-out infinite;
+}
+
+.progress-bar.is-complete .progress-bar__fill::after {
+  animation: none;
+}
+
+@keyframes progress-shine {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* ---------- Passo 5: Concluído ----------
+   0s     o ícone desce do canto para o centro
+   0.8s   redesenha-se a traço (e repete de 10 em 10 s)
+   3.2s   título e frase aparecem
+   3.6s   caixa "Launch" e botão Finish aparecem */
+.done-message {
+  position: absolute;
+  top: 278px;
+  left: 45px;
+  right: 45px;
+  text-align: center;
+  animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) 3.2s backwards;
+}
+
+.done-message__title {
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.done-message__text {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.done-launch {
+  position: absolute;
+  left: 45px;
+  bottom: 45px;
+  height: 33px;
+  font-size: 13px;
+  animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) 3.6s backwards;
+}
+
+/* O redesenho do logo (.is-redrawing) está em src/components/brand/logo.css */
+
+/* A animação de abertura (ícone a desenhar-se, encolher e subir) está em
+   src/components/brand/logo.css — partilhada com a tela de Boas-vindas. */
+
+/* Quem tem as animações desligadas no Windows vê logo o estado final */
+@media (prefers-reduced-motion: reduce) {
+  .installer *,
+  .installer *::before,
+  .installer *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+}

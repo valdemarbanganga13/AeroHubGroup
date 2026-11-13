@@ -1,0 +1,27 @@
+# Dependências e builds
+node_modules/
+dist/
+src-tauri/target/
+src-tauri/gen/schemas/
+dist-setup/
+installer/src-tauri/target/
+installer/src-tauri/gen/schemas/
+
+# Segredos — nunca enviar para o git
+.env
+.env.*
+!.env.example
+
+# Logs e sistema
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Configuração local do Claude Code (servidores de teste)
+.claude/
