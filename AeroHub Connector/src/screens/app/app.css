@@ -1384,3 +1384,29 @@ a.social-links__item:hover {
 .storage-flight__state.is-active {
   color: #8fd14f;
 }
+
+/* ---------- Sem licença: avisos "Precisa de licença" (opções do Discord) ---------- */
+.license-notice {
+  gap: 12px;
+}
+
+.license-notice__button {
+  flex-shrink: 0;
+  height: 30px;
+  padding: 0 14px;
+  font-size: 13px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.discord-preview__license {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.discord-preview__license a {
+  color: #8fd14f;
+  font-weight: 600;
+}

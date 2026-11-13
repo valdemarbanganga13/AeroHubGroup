@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Select from "../../components/Select";
 import Toggle from "../../components/Toggle";
 import ExternalLink from "../../components/ExternalLink";
+import LicenseNotice from "../../components/LicenseNotice";
 import { LINKS } from "../../config/links";
 import { useI18n } from "../../i18n/I18nProvider";
 import { useSettings } from "../../lib/settings";
@@ -189,7 +190,9 @@ export default function FeederPage() {
               />
             </label>
 
-            <label className="settings-row settings-row--toggle">
+            {/* Discord: só com licença */}
+            {!account?.hasLicense && <LicenseNotice />}
+            <label className={`settings-row settings-row--toggle ${account?.hasLicense ? "" : "is-disabled"}`} inert={!account?.hasLicense}>
               <div className="settings-row__text">
                 <p className="settings-row__title">{f.discord}</p>
                 <p className="settings-row__description">{f.discordDescription}</p>
@@ -201,7 +204,10 @@ export default function FeederPage() {
             </label>
 
             {/* Só conta com "Mostrar no meu Discord" ligado */}
-            <div className={`settings-row ${settings.feederDiscord ? "" : "is-disabled"}`} inert={!settings.feederDiscord}>
+            <div
+              className={`settings-row ${settings.feederDiscord && account?.hasLicense ? "" : "is-disabled"}`}
+              inert={!settings.feederDiscord || !account?.hasLicense}
+            >
               <div className="settings-row__text">
                 <p className="settings-row__title">{f.discordTime}</p>
                 <p className="settings-row__description">{f.discordTimeDescription}</p>

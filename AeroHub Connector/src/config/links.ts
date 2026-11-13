@@ -9,6 +9,8 @@ export const LINKS = {
   aerohubRadar: "https://aerohubradar.com",
   aerohubPhotos: "https://photos.aerohubradar.com",
   connectorWebsite: "https://connector.aerohubradar.com",
+  // Comprar a licença (secção Licence do site)
+  buyLicense: "https://connector.aerohubradar.com/#licence",
   aerohubForms: "https://forms.aerohubradar.com",
   aerohubSupport: "https://support.aerohubradar.com",
   // Perfil: gerir a conta e ligar o Infinite Flight (no site da AeroHub Radar)

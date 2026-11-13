@@ -4,6 +4,8 @@ import Checkbox from "../../components/Checkbox";
 import LanguageSelect from "../../components/LanguageSelect";
 import Select from "../../components/Select";
 import Toggle from "../../components/Toggle";
+import LicenseNotice from "../../components/LicenseNotice";
+import { useAccount } from "../../lib/account";
 import { useI18n } from "../../i18n/I18nProvider";
 import { openDiscord } from "../../lib/discord";
 import { applyStartWithWindows } from "../../lib/firstRun";
@@ -30,6 +32,7 @@ type SettingsPageProps = {
 export default function SettingsPage({ onCheckUpdates }: SettingsPageProps) {
   const { t, language, setLanguage } = useI18n();
   const [settings, updateSettings] = useSettings();
+  const { account } = useAccount();
   const [testState, setTestState] = useState<TestState>("idle");
   const resetTimer = useRef<number | undefined>(undefined);
   const [playing, setPlaying] = useState(false);
@@ -113,7 +116,9 @@ export default function SettingsPage({ onCheckUpdates }: SettingsPageProps) {
         <section className="settings-section">
           <h2 className="settings-section__title">{s.autopilot}</h2>
           <div className="settings-card">
-            <label className="settings-row settings-row--toggle">
+            {/* O piloto automático abre o Discord: só com licença */}
+            {!account?.hasLicense && <LicenseNotice />}
+            <label className={`settings-row settings-row--toggle ${account?.hasLicense ? "" : "is-disabled"}`} inert={!account?.hasLicense}>
               <div className="settings-row__text">
                 <p className="settings-row__title">{s.discordAutopilot}</p>
                 <p className="settings-row__description">{s.discordAutopilotDescription}</p>
@@ -124,7 +129,7 @@ export default function SettingsPage({ onCheckUpdates }: SettingsPageProps) {
               />
             </label>
 
-            <div className="settings-row">
+            <div className={`settings-row ${account?.hasLicense ? "" : "is-disabled"}`} inert={!account?.hasLicense}>
               <div className="settings-row__text">
                 <p className="settings-row__title">{s.test}</p>
                 <p className="settings-row__description">{s.testDescription}</p>

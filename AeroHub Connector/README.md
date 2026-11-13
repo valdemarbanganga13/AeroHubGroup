@@ -10,9 +10,9 @@ We publish the source code here for one reason: **so you can check what the app 
 
 ## What the app does
 
-- **Signs you in** with your AeroHub Radar account and checks that you have an AeroHub Connector licence.
-- **Shows your flight on Discord** (Rich Presence): route, aircraft, server, callsign and flight time. Discord only receives this through the Discord app on your own computer.
-- **Reads your flight status** from AeroHub Radar, so the app and Discord show your real flight.
+- **Signs you in** with your AeroHub Radar account and checks whether you have an AeroHub Connector licence. The Feeder, Storage and the mini window are free; the Discord features need a licence.
+- **Shows your flight on Discord** (Rich Presence, with a licence): route, aircraft, server, callsign and flight time. Discord only receives this through the Discord app on your own computer.
+- **Reads your flight status** from AeroHub Radar (with a licence), so the app and Discord show your real flight.
 - **Feeder (optional, off until you turn it on):** connects to Infinite Flight on your local network with the official Infinite Flight Connect API, reads your aircraft's position and flight plan, and, only during a flight on a Live server, sends it to the AeroHub Radar server so your flight appears on the map.
 - **Stores Feeder flights on your computer for a short time**, so you can see them in the app. Each flight file is deleted automatically 1 hour after the flight ends, or when you delete it.
 - **Checks for updates** and installs them only if they are signed by AeroHub Group.
@@ -57,9 +57,9 @@ The full list of every value read and sent is in [DATA.md](DATA.md).
 
 | File | SHA-256 |
 |---|---|
-| `AeroHub-Connector-Setup.exe` (Windows, from the website) | `9798ac8349f00990c6053415f37af6b0c13e9920b02c3e2e550ccbead1e4c24d` |
-| `AeroHub.Connector_1.0.0_x64-setup.exe` (Windows app installer) | `6b3a9f858e07b1b6b9037db02d0845be40c1cc805758444e6a6533ac070fc989` |
-| `AeroHub-Connector-Mac.dmg` (Mac) | `c8b88483f677d9a3ecfbc225fcc290926be687bd519851e55d7cdf359306ec82` |
+| `AeroHub-Connector-Setup.exe` (Windows, from the website) | `6720a577c58031002b540e0598e8c731aef98af05ca27c2d84c9a1c2a735164f` |
+| `AeroHub.Connector_1.0.0_x64-setup.exe` (Windows app installer) | `348282df4533833e4f78af3304de81fe6d17fef85eb75df989fd93d87f385977` |
+| `AeroHub-Connector-Mac.dmg` (Mac) | `8f7ad478106165eecd27fb9a7b44f7125f2908c4bb2192838eebf67881b2437f` |
 
 The files are published at https://github.com/valdemarbanganga13/aerohub-connector-releases/releases/tag/v1.0.0
 

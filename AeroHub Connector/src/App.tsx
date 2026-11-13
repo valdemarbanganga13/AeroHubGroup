@@ -61,16 +61,17 @@ function Screens({ firstRun }: { firstRun: boolean }) {
     setScreen("app");
   }
 
-  // Só entra no Início com sessão iniciada e licença do AeroHub Connector; senão vai para as Boas-vindas
+  // Entra no Início com a sessão iniciada, com ou sem licença: sem licença usa o Feeder, o Armazenamento e a mini
+  // janela; tudo o que é Discord precisa da licença (ver hasLicense nas páginas e no AppShell)
   async function enterIfAllowed(logoFrom: "corner" | "sidebar") {
     const current = await refresh().catch(() => null);
-    if (current?.hasLicense) enterApp(logoFrom);
+    if (current) enterApp(logoFrom);
     else setScreen("welcome");
   }
 
-  // Se a sessão terminar ou a licença deixar de valer com o app aberto, volta às Boas-vindas
+  // Se a sessão terminar com o app aberto, volta às Boas-vindas
   useEffect(() => {
-    if (screen === "app" && (!account || !account.hasLicense)) setScreen("welcome");
+    if (screen === "app" && !account) setScreen("welcome");
   }, [screen, account]);
 
   async function handleSignOut() {

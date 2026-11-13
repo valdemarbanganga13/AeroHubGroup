@@ -99,7 +99,8 @@ export default function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
         await signInWithRadar({ signal: controller.signal, onCode: setCode, onLink: setConnectUrl });
         current = await refresh();
       }
-      result = !current ? "error" : current.hasLicense ? "success" : "denied";
+      // Com ou sem licença, a conta entra (sem licença: sem Discord)
+      result = !current ? "error" : "success";
     } catch (error) {
       if (error instanceof SignInCancelled) {
         icon.classList.remove("is-processing");

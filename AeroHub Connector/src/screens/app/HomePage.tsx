@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import AppFooter from "../../components/AppFooter";
 import DiscordPresenceCard from "../../components/DiscordPresenceCard";
+import ExternalLink from "../../components/ExternalLink";
+import { LINKS } from "../../config/links";
 import { useI18n } from "../../i18n/I18nProvider";
 import { formatDuration, useNow } from "../../lib/time";
 import { useAccount } from "../../lib/account";
@@ -65,6 +67,7 @@ export default function HomePage({ pilot, onPictureInPicture }: HomePageProps) {
 // Voo em curso: rota com progresso, avião, servidor, tempo de voo e como aparece no Discord
 function CurrentFlight({ flight, onPictureInPicture }: { flight: LiveFlight; onPictureInPicture: () => void }) {
   const { t } = useI18n();
+  const { account } = useAccount();
   const now = useNow();
 
   // O tempo de voo conta sempre (desde o início, sem limite); a barra só enche se houver hora de chegada
@@ -147,6 +150,13 @@ function CurrentFlight({ flight, onPictureInPicture }: { flight: LiveFlight; onP
           </button>
         </div>
         <DiscordPresenceCard flight={flight} now={now} />
+        {/* Sem licença: o cartão mostra como ficaria, mas nada vai para o Discord */}
+        {!account?.hasLicense && (
+          <p className="discord-preview__license">
+            {t.app.license.homeHint}{" "}
+            <ExternalLink href={LINKS.buyLicense}>{t.app.license.get}</ExternalLink>
+          </p>
+        )}
       </section>
     </>
   );

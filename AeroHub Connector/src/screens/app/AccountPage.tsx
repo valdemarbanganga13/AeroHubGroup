@@ -57,12 +57,22 @@ export default function AccountPage({ onSignOut }: AccountPageProps) {
           <div className="settings-row">
             <div className="settings-row__text">
               <p className="settings-row__title">{a.licenseTitle}</p>
-              {licenseSince && <p className="settings-row__description">{a.since(licenseSince)}</p>}
+              {account.hasLicense ? (
+                licenseSince && <p className="settings-row__description">{a.since(licenseSince)}</p>
+              ) : (
+                <p className="settings-row__description">{t.app.license.freeDescription}</p>
+              )}
             </div>
-            <span className="status-badge is-ok">
-              <span className="status-badge__dot" aria-hidden="true" />
-              {a.active}
-            </span>
+            {account.hasLicense ? (
+              <span className="status-badge is-ok">
+                <span className="status-badge__dot" aria-hidden="true" />
+                {a.active}
+              </span>
+            ) : (
+              <ExternalLink className="btn btn-primary account-add" href={LINKS.buyLicense}>
+                {t.app.license.get}
+              </ExternalLink>
+            )}
           </div>
         </div>
       </section>

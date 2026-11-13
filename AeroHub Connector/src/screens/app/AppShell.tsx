@@ -123,7 +123,8 @@ export default function AppShell({
   }, []);
 
   // A voar: o voo aparece no Discord; sem voo, o status sai do Discord
-  useDiscordPresence(demoPilot || (feederPilot && !feederDiscord) ? null : flight);
+  // Discord só com licença (sem licença o app funciona, mas nada vai para o Discord)
+  useDiscordPresence(demoPilot || !account?.hasLicense || (feederPilot && !feederDiscord) ? null : flight);
 
   useEffect(() => {
     const logo = logoRef.current;

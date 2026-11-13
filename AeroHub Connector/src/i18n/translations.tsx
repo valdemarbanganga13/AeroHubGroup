@@ -213,6 +213,7 @@ export type Translations = {
       steps: string[];
     };
     legal: { terms: string; privacy: string };
+    license: { needed: string; discordOnly: string; get: string; freeDescription: string; homeHint: string };
     account: {
       subtitle: string;
       radarAccount: string;
@@ -528,6 +529,13 @@ const en: Translations = {
       ],
     },
     legal: { terms: "Terms of Service", privacy: "Privacy Policy" },
+    license: {
+      needed: "Needs a licence",
+      discordOnly: "Showing your flight on Discord needs an AeroHub Connector licence. The Feeder, Storage and the mini window are free.",
+      get: "Get licence",
+      freeDescription: "Not active. The Feeder, Storage and the mini window are free; a licence adds your flight on Discord.",
+      homeHint: "This is a preview. To show it on your Discord profile, you need a licence.",
+    },
     account: {
       subtitle: "Your AeroHub Radar account.",
       radarAccount: "AeroHub Radar account",
@@ -846,6 +854,13 @@ const pt: Translations = {
       ],
     },
     legal: { terms: "Termos de Serviço", privacy: "Política de Privacidade" },
+    license: {
+      needed: "Precisa de licença",
+      discordOnly: "Mostrar o teu voo no Discord precisa de uma licença do AeroHub Connector. O Feeder, o Armazenamento e a mini janela são grátis.",
+      get: "Obter licença",
+      freeDescription: "Não ativa. O Feeder, o Armazenamento e a mini janela são grátis; a licença junta o teu voo no Discord.",
+      homeHint: "Isto é uma pré-visualização. Para aparecer no teu perfil do Discord, precisas de uma licença.",
+    },
     account: {
       subtitle: "A sua conta AeroHub Radar.",
       radarAccount: "Conta AeroHub Radar",
@@ -1164,6 +1179,13 @@ const es: Translations = {
       ],
     },
     legal: { terms: "Términos de servicio", privacy: "Política de privacidad" },
+    license: {
+      needed: "Necesita licencia",
+      discordOnly: "Mostrar tu vuelo en Discord necesita una licencia de AeroHub Connector. El Feeder, el Almacenamiento y la mini ventana son gratis.",
+      get: "Obtener licencia",
+      freeDescription: "No activa. El Feeder, el Almacenamiento y la mini ventana son gratis; la licencia añade tu vuelo en Discord.",
+      homeHint: "Esto es una vista previa. Para mostrarlo en tu perfil de Discord, necesitas una licencia.",
+    },
     account: {
       subtitle: "Tu cuenta de AeroHub Radar.",
       radarAccount: "Cuenta de AeroHub Radar",
@@ -1483,6 +1505,13 @@ const fr: Translations = {
       ],
     },
     legal: { terms: "Conditions d'utilisation", privacy: "Politique de confidentialité" },
+    license: {
+      needed: "Licence requise",
+      discordOnly: "Afficher votre vol sur Discord nécessite une licence AeroHub Connector. Le Feeder, le Stockage et la mini fenêtre sont gratuits.",
+      get: "Obtenir une licence",
+      freeDescription: "Non active. Le Feeder, le Stockage et la mini fenêtre sont gratuits ; la licence ajoute votre vol sur Discord.",
+      homeHint: "Ceci est un aperçu. Pour l'afficher sur votre profil Discord, il vous faut une licence.",
+    },
     account: {
       subtitle: "Votre compte AeroHub Radar.",
       radarAccount: "Compte AeroHub Radar",
